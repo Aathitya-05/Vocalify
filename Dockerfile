@@ -22,5 +22,5 @@ COPY . .
 # Expose port 7860 (Hugging Face standard)
 EXPOSE 7860
 
-# Run uvicorn server pointing to port 7860
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+# Run decryption and start uvicorn server
+CMD ["sh", "-c", "python decrypt_secrets.py && uvicorn main:app --host 0.0.0.0 --port 7860"]
