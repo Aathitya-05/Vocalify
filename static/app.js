@@ -234,8 +234,8 @@ async function initializeApplication() {
     setupEventListeners();
     
     // Load dropdown options in the background
-    loadLanguages();
-    loadVoices();
+    await loadLanguages();
+    await loadVoices();
 }
 
 
