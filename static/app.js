@@ -168,7 +168,7 @@ const clearHistoryBtn = document.getElementById('clear-history-btn');
 // Initialize Application
 async function initializeApplication() {
     // Disable inspect and DevTools access for safety compliance
-    // disableInspection();
+    disableInspection();
 
     initCanvasSize();
     window.addEventListener('resize', initCanvasSize);
