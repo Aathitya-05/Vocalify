@@ -193,7 +193,7 @@ async function initializeApplication() {
     }
     updateAuthUI();
 
-    if (isFirebaseActive) {
+    if (false && isFirebaseActive) {
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const prevUser = currentUser;
@@ -226,6 +226,8 @@ async function initializeApplication() {
             }
         });
     } else {
+        currentUser = { id: 'test-123', name: 'Test User', email: 'test@vocalify.local', picture: '' };
+        updateAuthUI();
         loadHistory();
         loadGlossary();
     }
