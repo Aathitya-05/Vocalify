@@ -80,10 +80,9 @@ function disableInspection() {
 
     // Console warning message loop
     setInterval(() => {
-        console.clear();
         console.log('%cWARNING!', 'color: #ec4899; font-size: 40px; font-weight: bold; text-shadow: 0 0 10px rgba(236,72,153,0.5);');
         console.log('%cThis application is running in an AES-Encrypted Secure Session. Inspecting elements or printing variables is prohibited for security compliance.', 'color: #818cf8; font-size: 14px; font-weight: 500;');
-    }, 1000);
+    }, 5000);
 }
 
 // Trigger browser native download stream for large files
