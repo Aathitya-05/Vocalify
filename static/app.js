@@ -1,7 +1,22 @@
-import { firebaseConfig, isFirebaseConfigured } from './firebase-config.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as firebaseSignOut, onAuthStateChanged, signInAnonymously, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, getDocs, collection, deleteDoc, query, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// Attempt to load Firebase config and backend URL
+let firebaseConfig = null;
+let isFirebaseConfigured = () => false;
+let API_BASE_URL = "";
+
+try {
+    const configModule = await import('./firebase-config.js');
+    firebaseConfig = configModule.firebaseConfig;
+    isFirebaseConfigured = configModule.isFirebaseConfigured;
+    if (firebaseConfig && firebaseConfig.apiBaseUrl) {
+        API_BASE_URL = firebaseConfig.apiBaseUrl.replace(/\/$/, ""); // Strip trailing slash if present
+    }
+} catch (error) {
+    console.warn("firebase-config.js could not be loaded. Defaulting to Local Demo Mode.");
+}
 
 // Initialize Firebase
 let firebaseApp = null;
@@ -93,7 +108,7 @@ function triggerSecureDownload() {
     const base64 = window.btoa(unescape(encodeURIComponent(dataStr))); // Handles unicode safely
     const base64Url = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     
-    window.location.href = `/api/download?data=${encodeURIComponent(base64Url)}`;
+    window.location.href = `${API_BASE_URL}/api/download?data=${encodeURIComponent(base64Url)}`;
 }
 
 // Application State
@@ -256,7 +271,7 @@ function toggleTheme() {
 // Fetch lists from Backend API
 async function loadLanguages() {
     try {
-        const response = await fetch('/api/languages');
+        const response = await fetch(`${API_BASE_URL}/api/languages`);
         appLanguages = await response.json();
         
         targetLangSelect.innerHTML = '';
@@ -275,7 +290,7 @@ async function loadLanguages() {
 async function loadVoices() {
     const targetLang = targetLangSelect.value;
     try {
-        const response = await fetch(`/api/voices?lang=${targetLang}`);
+        const response = await fetch(`${API_BASE_URL}/api/voices?lang=${targetLang}`);
         currentVoices = await response.json();
         
         voiceSelect.innerHTML = '';
@@ -457,7 +472,7 @@ async function performTranslation() {
             source_lang: sourceLangSelect.value,
             target_lang: targetLangSelect.value
         });
-        const response = await fetch('/api/translate', {
+        const response = await fetch(`${API_BASE_URL}/api/translate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(encrypted)
@@ -528,7 +543,7 @@ async function generateSpeech() {
             rate: rateStr,
             pitch: pitchStr
         });
-        const response = await fetch('/api/tts', {
+        const response = await fetch(`${API_BASE_URL}/api/tts`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(encrypted)
