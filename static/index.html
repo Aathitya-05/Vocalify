@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocalify AI - Text to Tamil & Multi-Language Voice Synthesis</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+    <div class="background-gradients">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Login Screen Gatekeeper -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-card glass-panel">
+            <div class="login-logo-area">
+                <div class="login-logo-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <h2>Vocalify <span>AI</span></h2>
+                <p>Next-Generation Translation & Neural Speech Synthesis</p>
+            </div>
+            
+            <div class="login-actions">
+                <button id="login-google-btn" class="btn btn-primary btn-glow" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px;">
+                    <i class="fa-brands fa-google"></i> Sign In with Google
+                </button>
+                <div class="login-divider">
+                    <span>or continue with</span>
+                </div>
+                <button id="login-demo-btn" class="btn btn-secondary btn-glow-purple" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-user-gear"></i> Local Demo Mode
+                </button>
+            </div>
+            
+            <div class="login-features">
+                <div class="login-feat-item">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                    <div>
+                        <h4>Neural Voice Models</h4>
+                        <p>Adjust rate, pitch, and voice register dynamically</p>
+                    </div>
+                </div>
+                <div class="login-feat-item">
+                    <i class="fa-solid fa-language"></i>
+                    <div>
+                        <h4>12+ Target Languages</h4>
+                        <p>High-fidelity translation powered by neural models</p>
+                    </div>
+                </div>
+                <div class="login-feat-item">
+                    <i class="fa-solid fa-lock"></i>
+                    <div>
+                        <h4>Secure Session</h4>
+                        <p>AES payload encryption and offline data isolation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Vocalify <span>AI</span></h1>
+                    <p>Neural Text-to-Speech & Multi-Language Translation</p>
+                </div>
+            </div>
+            <div class="header-controls">
+                <div class="status-indicator security-indicator">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span class="status-text">AES Encrypted Session</span>
+                </div>
+                <div class="status-indicator">
+                    <span class="pulse-dot"></span>
+                    <span class="status-text">Neural Engine Ready</span>
+                </div>
+                
+                <!-- Google Authentication & User Profile Area -->
+                <div class="user-account-area">
+                    <div id="google-auth-container" style="display: flex; align-items: center; gap: 8px;">
+                        <!-- Google Sign-In Button (Firebase) -->
+                        <button id="google-signin-btn" class="btn btn-primary btn-glow" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">
+                            <i class="fa-brands fa-google"></i> Google Sign-In
+                        </button>
+                        
+                        <!-- Demo Login for development testing -->
+                        <button id="demo-login-btn" class="text-action-btn" title="Sign in with a Demo Account (no setup required)">
+                            <i class="fa-solid fa-user-gear"></i> Demo Sign-In
+                        </button>
+                    </div>
+
+                    <!-- User Profile Avatar/Badge (Hidden by default) -->
+                    <div id="user-profile-badge" class="user-profile-badge" style="display: none;">
+                        <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
+                        <div class="user-info-text">
+                            <span id="user-name" class="user-name">Guest</span>
+                        </div>
+                        <button id="signout-btn" class="icon-btn signout-btn" title="Sign Out">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <main class="app-grid">
+            
+            <!-- Left Panel: Input, Translation & Modulation -->
+            <section class="panel glass-panel left-panel">
+                <div class="panel-section-title">
+                    <i class="fa-solid fa-language"></i>
+                    <h2>Translation Engine</h2>
+                </div>
+
+                <!-- Language Selection -->
+                <div class="language-selector">
+                    <div class="select-wrapper">
+                        <label for="source-lang">Translate From</label>
+                        <select id="source-lang">
+                            <option value="auto" selected>Auto Detect</option>
+                            <option value="en">English</option>
+                            <option value="ta">Tamil (தமிழ்)</option>
+                            <option value="hi">Hindi (हिन्दी)</option>
+                            <option value="te">Telugu (తెలుగు)</option>
+                            <option value="ml">Malayalam (മലയാളം)</option>
+                            <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                            <option value="es">Spanish (Español)</option>
+                            <option value="fr">French (Français)</option>
+                            <option value="de">German (Deutsch)</option>
+                            <option value="ar">Arabic (العربية)</option>
+                            <option value="ja">Japanese (日本語)</option>
+                        </select>
+                    </div>
+                    <div class="swap-languages">
+                        <button id="swap-lang-btn" class="icon-btn" title="Swap Languages">
+                            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                        </button>
+                    </div>
+                    <div class="select-wrapper">
+                        <label for="target-lang">Translate To</label>
+                        <select id="target-lang">
+                            <!-- Populated dynamically, default is Tamil -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Input Text Box -->
+                <div class="text-card input-card">
+                    <div class="card-header">
+                        <span class="card-label">Enter Original Text</span>
+                        <div class="card-actions">
+                            <button id="clear-input-btn" class="text-action-btn" title="Clear input">
+                                <i class="fa-solid fa-trash-can"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="input-text" placeholder="Type or paste any text here..."></textarea>
+                    <div class="card-footer">
+                        <span class="char-count" id="input-char-count">0 chars</span>
+                    </div>
+                </div>
+
+                <!-- Action Button for Translation -->
+                <button id="translate-btn" class="btn btn-primary btn-glow">
+                    <i class="fa-solid fa-rotate"></i>
+                    <span>Translate Text</span>
+                </button>
+
+                <!-- Translation Output Box -->
+                <div class="text-card output-card">
+                    <div class="card-header">
+                        <span class="card-label">Translated Text (Edit if needed)</span>
+                        <div class="card-actions">
+                            <button id="copy-output-btn" class="text-action-btn" title="Copy translated text">
+                                <i class="fa-solid fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="output-text" placeholder="Translation will appear here. You can manually edit the translation before converting it to voice."></textarea>
+                    <div class="card-footer">
+                        <span class="char-count" id="output-char-count">0 chars</span>
+                    </div>
+                </div>
+
+                <!-- Translation Glossary & Refinements -->
+                <div class="panel-section-title spacing-top">
+                    <i class="fa-solid fa-spell-check"></i>
+                    <h2>Smart Glossary & Refinements</h2>
+                </div>
+                <div class="glossary-card">
+                    <p class="glossary-desc">Define custom overrides to automatically correct mistranslations, protect brand names, or refine vocabulary.</p>
+                    <div class="glossary-form">
+                        <input type="text" id="glossary-original" placeholder="If translation shows...">
+                        <span class="glossary-arrow"><i class="fa-solid fa-arrow-right-arrow-left"></i></span>
+                        <input type="text" id="glossary-refined" placeholder="Replace it with...">
+                        <button id="add-glossary-btn" class="icon-btn" title="Add Correction"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <div class="glossary-list-wrapper">
+                        <div id="glossary-list" class="glossary-list">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Selection & Modulation Sliders -->
+                <div class="panel-section-title spacing-top">
+                    <i class="fa-solid fa-sliders"></i>
+                    <h2>Voice Modulation & Pitch</h2>
+                </div>
+
+                <div class="modulation-controls">
+                    <!-- Narration Style Preset -->
+                    <div class="voice-selector-row">
+                        <label for="preset-select">Narration Style Preset</label>
+                        <div class="select-wrapper-preset">
+                            <select id="preset-select">
+                                <option value="default" selected>Default (Neutral / Reading)</option>
+                                <option value="warm">Warm & Intimate (Deep, Slow - Sexy)</option>
+                                <option value="conversational">Conversational (Natural, Fluent Talking)</option>
+                                <option value="energetic">Energetic (Fast, High-pitched)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Voice Dropdown -->
+                    <div class="voice-selector-row">
+                        <label for="voice-select">Neural Voice Model</label>
+                        <div class="select-wrapper-voice">
+                            <select id="voice-select">
+                                <!-- Populated dynamically based on target language -->
+                                <!-- Populated dynamically based on target language -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Modulation Sliders -->
+                    <div class="sliders-grid">
+                        <!-- Speed Slider -->
+                        <div class="slider-card">
+                            <div class="slider-header">
+                                <span class="slider-title"><i class="fa-solid fa-gauge-high"></i> Speed / Rate</span>
+                                <span class="slider-value" id="rate-value">Normal (0%)</span>
+                            </div>
+                            <input type="range" id="rate-slider" min="-50" max="100" value="0" step="5">
+                            <div class="slider-labels">
+                                <span>-50% (Slow)</span>
+                                <span>Normal</span>
+                                <span>+100% (Fast)</span>
+                            </div>
+                        </div>
+
+                        <!-- Pitch Slider -->
+                        <div class="slider-card">
+                            <div class="slider-header">
+                                <span class="slider-title"><i class="fa-solid fa-wave-square"></i> Voice Pitch</span>
+                                <span class="slider-value" id="pitch-value">Normal (0%)</span>
+                            </div>
+                            <input type="range" id="pitch-slider" min="-50" max="50" value="0" step="5">
+                            <div class="slider-labels">
+                                <span>-50% (Deep)</span>
+                                <span>Normal</span>
+                                <span>+50% (High)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Reset -->
+                    <div class="modulation-actions">
+                        <button id="reset-sliders-btn" class="text-btn">
+                            <i class="fa-solid fa-arrow-rotate-left"></i> Reset Voice Modulation
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Audio Player, Wave Visualizer & History -->
+            <section class="panel glass-panel right-panel">
+                <div class="panel-section-title">
+                    <i class="fa-solid fa-volume-high"></i>
+                    <h2>Voice Synthesizer</h2>
+                </div>
+
+                <!-- Generate Trigger Card -->
+                <div class="synthesize-trigger-box">
+                    <button id="generate-speech-btn" class="btn btn-secondary btn-glow-purple">
+                        <div class="pulse-ring"></div>
+                        <i class="fa-solid fa-microphone-lines btn-icon"></i>
+                        <span>Generate Neural Voice</span>
+                    </button>
+                </div>
+
+                <!-- Speech Output Player Dashboard -->
+                <div class="speech-output-card">
+                    <!-- Canvas Visualizer -->
+                    <div class="visualizer-container">
+                        <canvas id="waveform-canvas"></canvas>
+                        <div class="visualizer-overlay" id="visualizer-placeholder">
+                            <i class="fa-solid fa-waveform"></i>
+                            <p>Generate speech to visualize audio frequencies</p>
+                        </div>
+                    </div>
+
+                    <!-- Custom Player -->
+                    <div class="custom-player">
+                        <!-- Progress Bar -->
+                        <div class="player-progress-container" id="progress-container">
+                            <div class="player-progress-bar" id="progress-bar"></div>
+                            <div class="player-progress-handle" id="progress-handle"></div>
+                        </div>
+                        
+                        <!-- Controls Row -->
+                        <div class="player-controls-row">
+                            <!-- Time display -->
+                            <div class="player-time" id="player-time">0:00 / 0:00</div>
+
+                            <!-- Core buttons -->
+                            <div class="player-core-btns">
+                                <button id="play-pause-btn" class="player-btn play-btn" disabled>
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                            </div>
+
+                            <!-- Volume & Download -->
+                            <div class="player-right-controls">
+                                <div class="player-volume-control">
+                                    <button id="player-mute-btn" class="player-btn icon-only-btn">
+                                        <i class="fa-solid fa-volume-high"></i>
+                                    </button>
+                                    <input type="range" id="player-volume-slider" min="0" max="1" step="0.05" value="1">
+                                </div>
+                                <button id="download-speech-btn" class="btn btn-download" disabled>
+                                    <i class="fa-solid fa-download"></i> Download MP3
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History Log Section -->
+                <div class="panel-section-title spacing-top">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <h2>Synthesis History</h2>
+                </div>
+
+                <div class="history-container">
+                    <div class="history-header">
+                        <span id="history-count">0 items saved</span>
+                        <button id="clear-history-btn" class="text-action-btn" title="Clear all history">
+                            <i class="fa-solid fa-trash"></i> Clear All
+                        </button>
+                    </div>
+                    <div class="history-list" id="history-list">
+                        <!-- History Items populated dynamically -->
+                        <div class="history-empty">
+                            <i class="fa-solid fa-folder-open"></i>
+                            <p>No speech generated yet. Try translating and generating a voice.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Hidden native audio element -->
+    <audio id="native-audio" style="display: none;"></audio>
+
+    <!-- CryptoJS for secure payload encryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <!-- Client-side javascript -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
