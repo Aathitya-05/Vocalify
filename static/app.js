@@ -168,7 +168,7 @@ const clearHistoryBtn = document.getElementById('clear-history-btn');
 // Initialize Application
 async function initializeApplication() {
     // Disable inspect and DevTools access for safety compliance
-    disableInspection();
+    // disableInspection();
 
     initCanvasSize();
     window.addEventListener('resize', initCanvasSize);
@@ -230,9 +230,12 @@ async function initializeApplication() {
         loadGlossary();
     }
 
-    await loadLanguages();
-    await loadVoices();
+    // Attach event listeners immediately so the UI (like Sign-In) is responsive
     setupEventListeners();
+    
+    // Load dropdown options in the background
+    loadLanguages();
+    loadVoices();
 }
 
 if (document.readyState === 'loading') {
