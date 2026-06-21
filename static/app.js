@@ -8,7 +8,7 @@ let isFirebaseConfigured = () => false;
 let API_BASE_URL = "";
 
 try {
-    const configModule = await import('./firebase-config.js');
+    const configModule = await import(`./firebase-config.js?t=${Date.now()}`);
     firebaseConfig = configModule.firebaseConfig;
     isFirebaseConfigured = configModule.isFirebaseConfigured;
     if (firebaseConfig && firebaseConfig.apiBaseUrl) {
