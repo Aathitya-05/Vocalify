@@ -166,7 +166,7 @@ const historyCountLabel = document.getElementById('history-count');
 const clearHistoryBtn = document.getElementById('clear-history-btn');
 
 // Initialize Application
-document.addEventListener('DOMContentLoaded', async () => {
+async function initializeApplication() {
     // Disable inspect and DevTools access for safety compliance
     disableInspection();
 
@@ -233,7 +233,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadLanguages();
     await loadVoices();
     setupEventListeners();
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApplication);
+} else {
+    initializeApplication();
+}
 
 // Canvas Setup
 function initCanvasSize() {
