@@ -393,6 +393,7 @@ async def translate(request: EncryptedRequest):
             back_translation = "Verification translation unavailable."
             
     return {
+        "translated_text": google_translation,
         "google_translation": google_translation,
         "mymemory_translation": mymemory_translation,
         "back_translation": back_translation,
