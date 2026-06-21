@@ -440,17 +440,13 @@ function setupEventListeners() {
     glossaryOriginal.addEventListener('keypress', handleKeyPress);
     glossaryRefined.addEventListener('keypress', handleKeyPress);
 
-    // Google Sign-In and Demo Auth events
+    // Google Sign-In and Auth events
     const signinBtn = document.getElementById('google-signin-btn');
-    const demoBtn = document.getElementById('demo-login-btn');
     const loginGoogleBtn = document.getElementById('login-google-btn');
-    const loginDemoBtn = document.getElementById('login-demo-btn');
     const signoutBtn = document.getElementById('signout-btn');
     
     if (signinBtn) signinBtn.addEventListener('click', handleGoogleSignIn);
-    if (demoBtn) demoBtn.addEventListener('click', handleDemoLogin);
     if (loginGoogleBtn) loginGoogleBtn.addEventListener('click', handleGoogleSignIn);
-    if (loginDemoBtn) loginDemoBtn.addEventListener('click', handleDemoLogin);
     if (signoutBtn) signoutBtn.addEventListener('click', handleSignOut);
 }
 
@@ -1300,8 +1296,7 @@ async function handleGoogleSignIn() {
             alert(`Authentication failed: ${e.message}`);
         }
     } else {
-        alert("Firebase is not configured. Entering Local Demo Mode login...");
-        await handleDemoLogin();
+        alert("Authentication is currently unavailable because Firebase is not configured.");
     }
 }
 
@@ -1331,36 +1326,7 @@ function updateAuthUI() {
     }
 }
 
-async function handleDemoLogin() {
-    const username = prompt("Enter a demo username (e.g. user1, user2):", "demo_user");
-    if (!username) return;
-    const cleanUsername = username.trim().replace(/\s+/g, '_');
-    
-    if (isFirebaseActive) {
-        try {
-            const userCredential = await signInAnonymously(auth);
-            await updateProfile(userCredential.user, { displayName: username });
-        } catch (e) {
-            console.error("Anonymous Sign-In failed:", e);
-            alert(`Demo Sign-In failed: ${e.message}`);
-        }
-    } else {
-        currentUser = {
-            id: `local_${cleanUsername.toLowerCase()}`,
-            name: username,
-            email: `${cleanUsername.toLowerCase()}@local.demo`,
-            picture: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
-        };
-        
-        const encryptedUser = CryptoJS.AES.encrypt(JSON.stringify(currentUser), SECRET_KEY).toString();
-        localStorage.setItem('vocalify_user_secure', encryptedUser);
-        updateAuthUI();
-        
-        await syncGuestDataToLocalUser();
-        loadHistory();
-        loadGlossary();
-    }
-}
+
 
 async function handleSignOut() {
     if (confirm('Are you sure you want to sign out?')) {
