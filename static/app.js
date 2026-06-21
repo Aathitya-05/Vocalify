@@ -1294,6 +1294,7 @@ window.deleteGlossaryRule = async (index) => {
 };
 
 async function handleGoogleSignIn() {
+    console.log("Sign-in button clicked!", { isFirebaseActive, auth, GoogleAuthProvider });
     if (isFirebaseActive) {
         try {
             const provider = new GoogleAuthProvider();
