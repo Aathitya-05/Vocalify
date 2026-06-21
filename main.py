@@ -416,6 +416,8 @@ async def text_to_speech(request: EncryptedRequest):
     if pitch.endswith("%"):
         pitch = pitch.replace("%", "Hz")
     
+    logger.info(f"TTS request parameters: voice='{voice}', rate='{rate}', pitch='{pitch}', volume='{volume}', text_len={len(text)}, text_preview='{text[:60]}'")
+    
     if not text or not text.strip():
         raise HTTPException(status_code=400, detail="Text parameter cannot be empty")
     if not voice:
@@ -457,6 +459,8 @@ async def download_speech(data: str):
         volume = req_data.get("volume", "+0%")
         if pitch.endswith("%"):
             pitch = pitch.replace("%", "Hz")
+        
+        logger.info(f"Download request parameters: voice='{voice}', rate='{rate}', pitch='{pitch}', volume='{volume}', text_len={len(text)}, text_preview='{text[:60]}'")
         
         if not text or not text.strip():
             raise HTTPException(status_code=400, detail="Text cannot be empty")
