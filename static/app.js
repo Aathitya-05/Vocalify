@@ -238,11 +238,6 @@ async function initializeApplication() {
     loadVoices();
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApplication);
-} else {
-    initializeApplication();
-}
 
 // Canvas Setup
 function initCanvasSize() {
@@ -1408,4 +1403,10 @@ async function fetchGlossaryFromServer() {
     } catch (e) {
         console.error("Error fetching glossary from Firestore:", e);
     }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApplication);
+} else {
+    initializeApplication();
 }
