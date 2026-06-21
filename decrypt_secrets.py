@@ -19,6 +19,12 @@ def get_passphrase():
             if sys.argv[i] in ("-p", "--password") and i + 1 < len(sys.argv):
                 return sys.argv[i+1]
                 
+    # If not interactive (e.g. Docker/Render/CI), fail with a clean error message
+    if not sys.stdin.isatty():
+        print("Error: VOCALIFY_PASSPHRASE environment variable is not set and the terminal is non-interactive.")
+        print("Please configure the VOCALIFY_PASSPHRASE environment variable in your Render settings.")
+        sys.exit(1)
+        
     # Otherwise prompt interactively
     try:
         return getpass.getpass("Enter passphrase to decrypt secrets: ")
